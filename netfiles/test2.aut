@@ -1,0 +1,83 @@
+###
+## Plik z testowa siecia z jednym automatem.
+###
+
+net {
+
+	automaton pierwszy1 {
+	
+		clocks {
+			x; y; z;
+		};
+	
+		locations {
+			a1; 
+			b2 { urgent; inv x > 5; };
+			lokacyjka { init; };
+			c3; 
+			aa;
+			bb;
+			cc;
+		};
+		actions {
+			reset { urgent; };
+			open;
+			close;
+			bla;
+			ble;
+			blo;
+			ping;
+		};
+		trans { 
+			a1 -> aa, reset, y > 3, { x; };
+			aa -> bb, open, z < 2 && y = 3, { x; };
+			bb -> cc, close, x >= 4 && x-y > 5, { x; y; z; };
+			aa -> aa, 
+				bla, # akcja
+				y <= 6  &&  x >= 2  &&  x-y=5, # guard
+				{ }; # co resetowac
+			aa -> aa, ble, y <= 5 && x >= 4 && x-y=5, { };
+			aa -> aa, blo, y <= 3 && x >= 0 && x-y=5, { };
+			aa -> aa, ping, y <= 2 && x >= 1 && x-y=5, { };
+		};
+	};
+	
+	automaton drugi2 {
+
+		clocks {
+			x; y; z;
+		};
+	
+		locations {
+			a1; 
+			b2 { urgent; inv x > 5; };
+			lokacyjka;
+			c3; 
+			aa { init; };
+			bb;
+			cc;
+		};
+		actions {
+			reset { urgent; };
+			open;
+			close;
+			bla;
+			ble;
+			blo;
+			ping;
+		};
+		trans { 
+			a1 -> aa, reset, y > 3, { x; };
+			aa -> bb, open, z < 2 && y = 3, { x; };
+			bb -> cc, close, x >= 4 && x-y > 5, { x; y; z; };
+			aa -> aa, 
+				bla, # akcja
+				y <= 6  &&  x >= 2  &&  x-y=5, # guard
+				{ }; # co resetowac
+			aa -> aa, ble, y <= 5 && x >= 4 && x-y=5, { };
+			aa -> aa, blo, y <= 3 && x >= 0 && x-y=5, { };
+			aa -> aa, ping, y <= 2 && x >= 1 && x-y=5, { };
+		};
+	};
+	
+};

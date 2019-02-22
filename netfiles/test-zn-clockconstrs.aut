@@ -1,0 +1,39 @@
+# siec automatow z ZN, ale bez zmiennych calkowitych 
+# niezmienniki lokacji i ograniczenia na przejsciach uniemozliwiaja niektore z nich
+
+net {
+
+	actions { m; n; p; q; w; };
+
+	automaton automacikB1 {
+		clocks {
+			x1;
+		};
+		locations {
+			a { init; };
+			b { inv x1 < 1; };
+		};
+		trans {
+			a -> b , m , , { x1; };
+			b -> b , q , , { };
+			b -> a , n , , { };
+		};
+	};
+	
+	automaton automacikB2 {
+		clocks {
+			x2;
+		};
+		locations {
+			d;
+			c { init; };
+			e { inv x2 < 3; };
+		};
+		trans {
+			c -> d , p , , { };
+			d -> e , m , x2 > 3 , { };
+			e -> c , n , , { x2; };
+		};
+	};
+		
+};

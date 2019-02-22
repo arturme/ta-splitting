@@ -1,0 +1,25 @@
+Do poprawy (optymalizacje):
+- sposob zwracania przez f-cje prod_loc_acts akcji wykonalnych z okr.
+  lokacji jest tragiczny i jest paskudna strata pamieci i czasu ;)
+
+- z kazda aktualizacja DBM przeliczam PK, co moze sie okazac bez sensu
+
+- przy obliczaniu pre_e wystepuje powtarzajace sie guard(e) n I(s),
+  ktore jest niezmienne dla dodanego przejscia. Mozna zapisac
+  obliczony wynik wraz z zapisanym przejsciem e. Dodatkowo mozna
+  traktowac NULL jak strefe bez ograniczen, co pozwoli nam
+  przyspieszyc obliczenia i jednoczesnie nie zuzyje zbyt wiele pamieci
+  (zakladajac ze nie wszedzie sa okreslone niezmienniki/guardy).
+
+- sprawdzanie pustosci przeciecia dwoch stref bez alokowania zadnych
+  DBM-ow, np. wykorzystywac zawsze ten sam tymczasowy DBM
+
+- tam gdzie przekazujemy argument do funkcji wskazujacy na zbior
+  reachstable, moze warto wprowadzic zmienne globalne? Z punktu
+  widzenia zlozonosci rozni sie to tylko o pewna stala.
+
+- Sprawdzanie czy Z n Z' = Z mozna zrealizowac w wydajniejszy sposob, bo
+  nie potrzeba obliczac dokladnego wyniku, tylko sprawdzac czy minimum
+  jest rowne temu co jest w Z. Odpada wtedy alokowanie dodatkowych DBM-ow
+  i zwalnianie ich.
+

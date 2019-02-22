@@ -1,0 +1,209 @@
+#######################################
+# Fischer's mutual exclusion protocol #
+#######################################
+#                                     #
+# przy setv1, setv2 - duza delta      #
+# przy enter1, enter2 - mala delta    #
+#                                     #
+# wzajemne wykluczanie przy:          #
+#                                     #
+#   mala delta >= duza delta          #
+#                                     #
+#######################################
+
+net {
+	actions {
+		start1;
+		setv1;
+		enter1;
+		setv01;
+		
+		start2;
+		setv2;
+		enter2;
+		setv02;
+		
+		start3;
+		setv3;
+		enter3;
+		setv03;
+
+		start4;
+		setv4;
+		enter4;
+		setv04;
+
+		start5;
+		setv5;
+		enter5;
+		setv05;
+	};
+
+	automaton proc1 {
+		clocks {
+			x1;
+		};
+		locations {
+			idle1 { init; };
+			try1;
+			wait1;
+			crit1;
+		};
+		trans {
+			idle1 -> try1, start1, , { x1; };
+			try1 -> wait1, setv1, x1 < 2, { x1; };
+			wait1 -> crit1, enter1, x1 > 1, { };
+			crit1 -> idle1, setv01, , { };
+		};
+	};
+
+	automaton proc2 {
+		clocks {
+			x2;
+		};
+		locations {
+			idle2 { init; };
+			try2;
+			wait2;
+			crit2;
+		};
+		trans {
+			idle2 -> try2, start2, , { x2; };
+			try2 -> wait2, setv2, x2 < 2, { x2; };
+			wait2 -> crit2, enter2, x2 > 1, { };
+			crit2 -> idle2, setv02, , { };
+		};
+	};
+	
+	automaton proc3 {
+		clocks {
+			x3;
+		};
+		locations {
+			idle3 { init; };
+			try3;
+			wait3;
+			crit3;
+		};
+		trans {
+			idle3 -> try3, start3, , { x3; };
+			try3 -> wait3, setv3, x3 < 2, { x3; };
+			wait3 -> crit3, enter3, x3 > 1, { };
+			crit3 -> idle3, setv03, , { };
+		};
+	};
+	
+	automaton proc4 {
+		clocks {
+			x4;
+		};
+		locations {
+			idle4 { init; };
+			try4;
+			wait4;
+			crit4;
+		};
+		trans {
+			idle4 -> try4, start4, , { x4; };
+			try4 -> wait4, setv4, x4 < 2, { x4; };
+			wait4 -> crit4, enter4, x4 > 1, { };
+			crit4 -> idle4, setv04, , { };
+		};
+	};
+	
+	automaton proc5 {
+		clocks {
+			x5;
+		};
+		locations {
+			idle5 { init; };
+			try5;
+			wait5;
+			crit5;
+		};
+		trans {
+			idle5 -> try5, start5, , { x5; };
+			try5 -> wait5, setv5, x5 < 2, { x5; };
+			wait5 -> crit5, enter5, x5 > 1, { };
+			crit5 -> idle5, setv05, , { };
+		};
+	};
+	
+	automaton varV {
+		locations {
+			v0 { init; };
+			v1;
+			v2;
+			v3;
+			v4;
+			v5;
+		};
+		trans {
+			v0 -> v0, start1, , { };
+			v0 -> v0, start2, , { };
+			v0 -> v0, start3, , { };
+			v0 -> v0, start4, , { };
+			v0 -> v0, start5, , { };
+			v0 -> v1, setv1, , { };
+			v0 -> v2, setv2, , { };
+			v0 -> v3, setv3, , { };
+			v0 -> v4, setv4, , { };
+			v0 -> v5, setv5, , { };
+			
+			v1 -> v0, setv01, , { };
+			v1 -> v1, enter1, , { };
+			v1 -> v1, setv1, , { };
+			v1 -> v2, setv2, , { };
+			v1 -> v3, setv3, , { };
+			v1 -> v4, setv4, , { };
+			v1 -> v5, setv5, , { };
+			
+			v2 -> v0, setv02, , { };
+			v2 -> v2, enter2, , { };
+			v2 -> v1, setv1, , { };
+			v2 -> v2, setv2, , { };
+			v2 -> v3, setv3, , { };
+			v2 -> v4, setv4, , { };
+			v2 -> v5, setv5, , { };
+		
+			v3 -> v0, setv03, , { };
+			v3 -> v3, enter3, , { };
+			v3 -> v1, setv1, , { };
+			v3 -> v2, setv2, , { };
+			v3 -> v3, setv3, , { };
+			v3 -> v4, setv4, , { };
+			v3 -> v5, setv5, , { };
+		
+			v4 -> v0, setv04, , { };
+			v4 -> v4, enter4, , { };
+			v4 -> v1, setv1, , { };
+			v4 -> v2, setv2, , { };
+			v4 -> v3, setv3, , { };
+			v4 -> v4, setv4, , { };
+			v4 -> v5, setv5, , { };
+			
+			v5 -> v0, setv05, , { };
+			v5 -> v5, enter5, , { };
+			v5 -> v1, setv1, , { };
+			v5 -> v2, setv2, , { };
+			v5 -> v3, setv3, , { };
+			v5 -> v4, setv4, , { };
+			v5 -> v5, setv5, , { };
+			
+		};
+	};
+
+};
+
+reach {
+ 	mutualexclusion_p1p2 { crit1@proc1 crit2@proc2 };
+	mutualexclusion_p1p3 { crit1@proc1 crit3@proc3 };
+	mutualexclusion_p1p4 { crit1@proc1 crit4@proc4 };
+	mutualexclusion_p1p5 { crit1@proc1 crit5@proc5 };
+	mutualexclusion_p2p3 { crit2@proc2 crit3@proc3 };
+	mutualexclusion_p2p4 { crit2@proc2 crit4@proc4 };
+	mutualexclusion_p2p5 { crit2@proc2 crit5@proc5 };
+	mutualexclusion_p3p4 { crit3@proc3 crit4@proc4 };
+	mutualexclusion_p3p5 { crit3@proc3 crit5@proc5 };
+	mutualexclusion_p4p5 { crit4@proc4 crit5@proc5 };
+};

@@ -1,0 +1,92 @@
+# Train-Gate-Controller
+
+net {
+
+	actions { 
+		approach;
+		in;
+		out;
+		exit;
+		lower;
+		down;
+		raise;
+		up;
+	};
+
+	automaton Train {
+		clocks {
+			x1;
+		};
+		locations {
+			t0 { init; };
+			t1 { inv x1 <= 500; };
+			t2 { inv x1 <= 500; };
+			t3 { inv x1 <= 500; };
+		};
+		trans {
+			t0 -> t1, approach, , { x1; };
+			t1 -> t2, in, x1 >= 300, { };
+			t2 -> t3, out, , { };
+			t3 -> t0, exit, x1 <= 500, { };
+		};
+	};
+	
+	automaton Gate {
+		clocks {
+			x2;
+		};
+		locations {
+			g0 { init; };
+			g1 { inv x2 <= 100; };
+			g2;
+			g3 { inv x2 <= 200; };
+		};
+		trans {
+			g0 -> g1, lower, , { x2; };
+			g1 -> g2, down, x2 <= 100, { };
+			g2 -> g3, raise, , { x2; };
+			g3 -> g0, up, x2 >= 100 && x2 <= 200, { };
+		};
+	};
+
+	automaton Controller {
+		clocks {
+			x3;
+			#a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z; # atrapy do testowania DBM-ow
+			#a1;b1;c1;d1;e1;f1;g1;h1;i1;j1;k1;l1;m1;
+			#n1;o1;p1;q1;r1;s1;t1;u1;v1;w1;x1;y1;z1;
+		};
+		locations {
+			c0 { init; };
+			c1 { inv x3 <= 100; };
+			c2;
+			c3 { inv x3 <= 100; };
+		};
+		trans {
+			c0 -> c1, approach, , { x3; };
+			c1 -> c2, lower, x3 = 100, { };
+			c2 -> c3, exit, , { x3; };
+			c3 -> c0, raise, x3 <= 100, { };
+		};
+	};
+	
+	automaton specification {
+		clocks {
+			x9;
+		};
+		locations {
+			s0 { init; };
+			s1;
+			sErr;
+		};
+		trans {
+			s0 -> s0, up, , { };
+			s0 -> s1, down, , { x9; };
+			s1 -> sErr, up, x9 > 700, { };
+ 			s1 -> s0, up, x9 <= 700, { };
+			s1 -> s1, down, x9 <= 700, { };
+
+		};
+	};
+	
+};

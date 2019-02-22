@@ -1,0 +1,36 @@
+# siec automatow z ZN, ale bez zmiennych calkowitych 
+
+net {
+
+	actions { m; n; p; q; w; };
+
+	automaton automacikB1 {
+		clocks {
+		};
+		locations {
+			a { init; };
+			b;
+		};
+		trans {
+			a -> b , m , , { };
+			b -> b , q , , { };
+			b -> a , n , , { };
+		};
+	};
+	
+	automaton automacikB2 {
+		clocks {
+				};
+		locations {
+			d;
+			c { init; };
+			e;
+		};
+		trans {
+			c -> d , p , , { };
+			d -> e , m , , { };
+			e -> c , n , , { };
+		};
+	};
+		
+};
